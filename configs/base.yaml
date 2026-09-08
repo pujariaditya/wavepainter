@@ -1,0 +1,497 @@
+# LibriTTS at BigVGAN's front end, Qwen2.5-0.5B trunk. SELF-CONTAINED.
+#
+# NO `base_config`. This file used to inherit from `fluenteditor.yaml`, which
+# still carries the retired VCTK-era values -- 22050 Hz, 80 mel bins, HiFi-GAN,
+# and `use_dualffn_trunk: false`. Every one was overridden here, so the run was
+# correct, but the inheritance was a live trap rather than untidiness: the trunk
+# flag WAS inherited as false for a while, and the config the brief pointed an
+# agent at could not build the model the brief described. An agent reading the
+# base to understand the model read the wrong sample rate, the wrong band count
+# and the wrong vocoder.
+#
+# Flattened by resolving the full chain and emitting it. Verified: the resolved
+# hparams dict is byte-identical to the two-file version apart from 18 keys that
+# appear nowhere in any .py under the seed, the grader or scripts.
+
+# ------------------------------------------------------------------------
+# THE DONOR AND THE TRUNK
+# ------------------------------------------------------------------------
+trunk_donor: Qwen/Qwen2.5-0.5B
+use_dualffn_trunk: true
+trunk_layers: 14
+trunk_layer_pick: ends
+trunk_warm_start: true
+trunk_freeze_tok_emb: true
+trunk_adaptation: audio_lora
+trunk_lora_rank: 8
+trunk_lora_alpha: 16.0
+trunk_use_text: true
+trunk_use_ph: true
+trunk_max_text: 48
+trunk_grad_ckpt: true
+trunk_inject: add
+trunk_pretrained_lr_scale: 0.05
+rope_half: true
+rope_reset_at_nt: true
+
+# ------------------------------------------------------------------------
+# FRONT END -- must match BigVGAN exactly
+# ------------------------------------------------------------------------
+mel_type: bigvgan
+audio_sample_rate: 24000
+audio_num_mel_bins: 100
+keep_bins: 100
+fft_size: 1024
+hop_size: 256
+win_size: 1024
+fmin: 0
+fmax: null
+loud_norm: false
+vocoder: BigVGAN
+spec_min:
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+- -11.5129
+spec_max:
+- 1.0604
+- 1.4571
+- 1.2852
+- 1.3722
+- 1.1957
+- 1.6533
+- 1.5299
+- 1.1385
+- 1.2986
+- 1.3136
+- 1.5607
+- 1.3109
+- 1.7511
+- 1.7297
+- 1.5513
+- 1.6957
+- 1.3587
+- 1.8329
+- 1.4253
+- 1.2918
+- 1.4762
+- 1.3411
+- 1.4748
+- 1.3285
+- 1.4044
+- 1.1602
+- 1.4003
+- 1.2423
+- 1.2876
+- 1.0298
+- 1.2514
+- 1.1693
+- 1.2147
+- 1.1453
+- 1.055
+- 1.2303
+- 1.4054
+- 1.0691
+- 1.1672
+- 1.21
+- 0.6927
+- 0.6037
+- 0.9786
+- 0.361
+- 0.7867
+- 0.3277
+- 0.4398
+- 0.5989
+- 0.4387
+- 0.3292
+- 0.1331
+- 0.2449
+- 0.2704
+- -0.1298
+- 0.0984
+- -0.1073
+- -0.1773
+- -0.1167
+- -0.1131
+- -0.1729
+- -0.3771
+- -0.3133
+- -0.5095
+- -0.6342
+- -0.1225
+- -0.0924
+- -0.2996
+- -0.1631
+- -0.4548
+- -0.6299
+- -0.4956
+- -0.2327
+- -0.2719
+- -0.8649
+- -0.4402
+- -0.6376
+- -0.7074
+- -0.552
+- -0.7659
+- -0.7273
+- -0.8326
+- -0.7609
+- -0.9281
+- -0.6764
+- -0.3611
+- -1.0908
+- -1.167
+- -0.9377
+- -0.699
+- -0.7402
+- -1.1614
+- -1.1782
+- -0.6824
+- -0.8936
+- -0.7902
+- -1.1805
+- -1.3148
+- -1.3482
+- -1.61
+- -2.2738
+
+# ------------------------------------------------------------------------
+# DATA
+# ------------------------------------------------------------------------
+ds_name: libritts
+raw_data_dir: data/raw/libritts
+processed_data_dir: data/processed/libritts
+binary_data_dir: data/binary/libritts_bigvgan
+binarizer_cls: wavepainter.datasets.base_binarizer.BaseBinarizer
+max_frames: 1548
+max_input_tokens: 1550
+max_tokens: 40000
+# 16, not the 32 the Phase A recipe used. 32 was measured alone on the card;
+# with the 2-slot semaphore two trainers can be resident and 32 each will not
+# fit. If you have the card to yourself, 32 is ~56% faster and is what the
+# reference Phase A ran -- raise it and say so, since it changes the data seen
+# per update and therefore the phase boundaries.
+max_sentences: 16
+max_valid_tokens: 60000
+max_valid_sentences: 1
+min_frames: 0
+sort_by_len: true
+endless_ds: true
+ds_workers: 2
+
+# ------------------------------------------------------------------------
+# DIFFUSION DECODER
+# ------------------------------------------------------------------------
+diff_decoder_type: wavenet
+diff_loss_type: l1
+timesteps: 8
+timescale: 1
+schedule_type: vpsde
+residual_layers: 20
+residual_channels: 256
+dilation_cycle_length: 1
+hidden_size: 192
+cond_dim: 0
+
+# ------------------------------------------------------------------------
+# MASKING AND EDITING
+# ------------------------------------------------------------------------
+# ============================ MASK CURRICULUM =============================
+# THE ORDER MATTERS MORE THAN THE VALUES. Train at 0.8 FIRST, then switch.
+#
+#   Phase A  ratio 0.8   lr 2e-4  batch 32  warmup 8000  -> step ~11000
+#   Phase B  ratio 0.15  lr 2e-5  batch 16  FRESH optimizer, 500 updates
+#   Phase C  ratio 0.15  lr 2e-5  batch 16  resume optimizer -> step ~20000
+#   Phase D  + phone-mel prototype CE @ 0.05 (lambda_phone_mel_contrast)
+#   Phase E  same recipe, 5000-update legs -> step 30000 (the peak)
+#
+# PHASE A IS NOT REPRODUCIBLE BY RUNNING PHASE A. Read this before budgeting a
+# rebuild. The endpoint that the rest of the schedule was measured from is
+#     archive/xphone-durlogit-11k-0.3297/model_ckpt_steps_11000.ckpt
+# and its steps 10000-11000 are NOT 0.8-mask editor training: they are a
+# duration-only XPhone projection trained against a FROZEN editor. Verified in
+# that container: 732 tensors = 531 editor + 201 `xphone_context.*`, and its own
+# config records `use_xphone_context: true`, `xphone_context_route: duration_logit`.
+# The XPhone route no longer exists in this source, so the container cannot be
+# loaded as-is either. Recovering the parent means stripping the 201 tensors and
+# DROPPING the optimizer state, which belonged only to the projection. A fresh
+# 11k run at ratio 0.8 lands somewhere else on the curve.
+#
+# Two more things the phase list does not say, both load-bearing:
+#   * Phase D resumes the exact step-20000 OPTIMIZER STATE, and Phase E walks
+#     THROUGH step 21000 -- an endpoint that scored a regression (0.4035 ->
+#     0.3978). Restarting from 20500 with a fresh optimizer is a different
+#     trajectory. Do not route around the dip.
+#   * `int(D * ratio)` rounds to an EMPTY mask for 0.33% of training items. That
+#     bug is in the measured recipe and was never ablated. `max(1, int(...))` is
+#     a one-character fix and a deviation -- pair it with a control or leave it.
+#
+# The endpoint is a point on a curve the notes call high-variance: insertion
+# moved 17 -> 31 -> 25 realised edits across three checkpoints 500 updates apart
+# with the recipe held fixed. Expect a distribution, not 0.4484 exactly.
+#
+# A from-scratch 0.15 run FAILS. Two independent attempts held substitution
+# ACC at exactly 1.6% with WER *worse* than the 0.8 baseline. At 0.15 the model
+# sees ~5.3x fewer phones under blanked alignment per batch, because
+# `add_dur_loss` averages over all non-padding phones -- so 0.15 RECALIBRATES a
+# duration function that already works. It cannot teach one.
+#
+# The switch itself is the largest single measured win in this project: a
+# paired control on the same checkpoint inode, same 500 updates, changing ONLY
+# this value, moved substitution 15.6% -> 42.2% and insertion 14.1% -> 40.6%.
+#
+# Selection is on substitution ACC, then insertion ACC, then WER. Never on
+# validation loss: step 19500 improved val loss while losing 6 substitutions
+# and 9 insertions. Past step 18500 the validation path reports NaN mel
+# L1/SSIM on empty-mask batches -- the checkpoints are fine, do not read it as
+# divergence.
+training_mask_ratio: 0.8
+infer_mask_ratio: 0.3
+mask_type: continuous_
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+# a contiguous middle span regenerated with REAL mel context on BOTH sides, at
+#
+# List of parameter-name prefixes to KEEP trainable; everything else is frozen
+# after parent load. Empty (default) => train everything (exact parent). Set
+# e.g. ['denoise_fn.'] to train only the diffusion denoiser -- a drift-free child
+# whose trunk/heads stay byte-exact parent, suitable for weight interpolation.
+# Parameter-name prefixes to KEEP trainable; everything else is frozen once the
+# parent checkpoint is loaded. Empty (the default) trains everything. Phase 2
+# sets ['denoise_fn.'] to train only the diffusion denoiser -- a drift-free child
+# whose trunk and heads stay byte-exact to the parent, which is what makes the
+# interpolation back toward it meaningful.
+trainable_only: []
+
+# ------------------------------------------------------------------------
+# LOSSES
+# ------------------------------------------------------------------------
+lambda_f0: 1.0
+# Phase D: cross-entropy between generated masked mel frames and one frozen
+#
+#
+
+# PHASE 1, stage D. Cross-entropy between generated masked mel frames and one
+# frozen standardised mean mel per phone. Worth +0.0286 on the phase-1 curve.
+#
+# DEFAULT ZERO ON PURPOSE: at zero the teacher never opens the .npz, so this is
+# an exact ablation rather than a multiply-by-zero, and the repository runs
+# without the artifact present. Build the bank with
+# scripts/build_phone_mel_prototypes.py, then set 0.05.
+#
+# Do NOT substitute a stronger teacher. A HuBERT layer-9 bank at 65.77% held-out
+# frame accuracy scored WORSE than this one at 14.83%. Representation quality is
+# a fail-fast gate here, never a promotion metric.
+lambda_phone_mel_contrast: 0.0
+phone_mel_temperature: 0.1
+phone_mel_prototypes: assets/phone_mel_prototypes.npz
+lambda_ph_dur: 0.1
+lambda_sent_dur: 0.0
+lambda_uv: 1.0
+lambda_word_dur: 1.0
+mel_losses: l1:0.5|ssim:0.5
+use_conn_loss: true
+use_perceptual_loss: true
+# regenerated span (training-only; teachers never enter the checkpoint).
+# PHASE 2. Frozen-HuBERT conv-feature loss on a matched crop of the regenerated
+# span. Training-only: the frozen BigVGAN and HuBERT teachers are held as plain
+# objects rather than registered modules, so neither can enter the checkpoint.
+# At 0.0 neither teacher is ever constructed, which makes the ablation exact.
+# configs/phase2_hubert_dn_a085.yaml sets this to 100.0.
+lambda_hubert_feature: 0.0
+hubert_feature_crop_frames: 64
+hubert_feature_context_frames: 12
+hubert_feature_items_per_batch: 1
+hubert_feature_layer: conv
+
+# ------------------------------------------------------------------------
+# OPTIMISER AND SCHEDULE
+# ------------------------------------------------------------------------
+lr: 0.0002
+optimizer_adam_beta1: 0.9
+optimizer_adam_beta2: 0.98
+weight_decay: 0
+clip_grad_norm: 1
+clip_grad_value: 0
+scheduler: warmup
+warmup_updates: 8000
+# PHASE A endpoint, for a COLD START only. See the phase schedule above
+# `training_mask_ratio`. 200000 was a placeholder nothing ever reached.
+#
+# IF YOU START FROM A PARENT, RAISE THIS FIRST. The trainer stops as soon as
+# `global_step > max_updates`. An implicit resume restores the parent's step
+# counter, so a parent at step 30000 against this value trains for zero
+# updates, writes a checkpoint, and exits looking like a completed run.
+max_updates: 11000
+accumulate_grad_batches: 1
+
+# ------------------------------------------------------------------------
+# PITCH AND ENERGY
+# ------------------------------------------------------------------------
+use_pitch_embed: true
+pitch_type: frame
+use_uv: true
+pitch_extractor: parselmouth
+f0_min: 80
+f0_max: 600
+use_energy_embed: false
+use_spk_id: false
+use_spk_embed: true
+
+# ------------------------------------------------------------------------
+# VALIDATION AND CHECKPOINTS
+# ------------------------------------------------------------------------
+val_check_interval: 2000
+num_sanity_val_steps: 5
+num_valid_plots: 10
+num_ckpt_keep: 3
+save_best: false
+save_gt: true
+valid_infer_interval: 2000
+print_nan_grads: false
+seed: 1234
+tb_log_interval: 100
+
+# ------------------------------------------------------------------------
+# EVERYTHING ELSE (inherited, still read by the codebase)
+# ------------------------------------------------------------------------
+# AMP is ON. Measured ~56% more throughput at batch 32 (32 utts/6.86 s versus
+# 16/5.35 s) with no non-finite losses. It was `false`, which made a research-
+# length run cost days: the un-accelerated seed is ~2.3 s/update, i.e. >5 days
+# for 200k updates. Turning it on is precision and runtime only -- the single
+# inference path is unchanged.
+amp: true
+dropout: 0.0
+eval_max_batches: -1
+frames_multiple: 1
+gen_dir_name: ''
+gst_seed: 1234
+gst_trainable: false
+# Start a NEW arm from a trained parent: model weights only, no optimizer and
+# no step counter. Point it at a file or at a directory holding
+# model_ckpt_steps_*.ckpt. Empty means cold-start from the donor.
+#
+# This differs from the trainer's implicit resume, which picks up whatever is
+# already in your own work_dir and carries the step counter and the warmup
+# schedule position with it. Parent -> new arm: load_ckpt. Continue an arm you
+# already started: just relaunch with the same exp_name.
+#
+# The load is non-strict so you can add components onto the trunk, but it is
+# floored: it fails if it consumes less than `load_ckpt_min_match` of the
+# parent's tensors, which is what a wrong path looks like.
+load_ckpt: ''
+load_ckpt_min_match: 0.9
+max_beta: 0.06
+mel_vmax: 1.5
+mel_vmin: -6
+out_wav_norm: false
+resume_from_checkpoint: 0
+save_codes:
+- tasks
+- modules
+task_cls: wavepainter.task.WavePainterTask
+test_ids: []
+test_set_name: test
+train_set_name: train
+train_sets: ''
+use_gt_dur: false
+use_gt_f0: false
+valid_monitor_key: val_loss
+valid_monitor_mode: min
+valid_set_name: valid

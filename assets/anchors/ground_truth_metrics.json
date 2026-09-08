@@ -1,0 +1,15 @@
+{
+ "n_items": 256,
+ "wer_floor": {
+  "wer_headline_pct": 1.705,
+  "wer_corpus_pct": 1.535,
+  "n_items": 256,
+  "n_words": 3062
+ },
+ "sim_self": {
+  "sim": 1.0,
+  "sim_std": 0.0,
+  "n": 256
+ },
+ "note": "The untouched source recordings scored against their own transcript. wer_headline_pct is the floor nothing can beat; sim_self is 1.0 by construction and is present as a check that the similarity path is wired correctly."
+}

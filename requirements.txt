@@ -1,0 +1,29 @@
+# Mirrors pyproject.toml. Install torch/torchaudio from the PyTorch index
+# matching your CUDA build first if the default wheels do not suit.
+torch==2.4.1
+torchaudio==2.4.1
+numpy<2
+scipy
+pandas
+six
+packaging
+pyyaml
+tqdm
+matplotlib
+tensorboard
+safetensors
+transformers>=4.40,<5   # 5.x needs torch>=2.5 and silently disables the torch backend
+huggingface_hub>=0.23
+librosa
+soundfile
+pyloudnorm
+praat-parselmouth
+resemblyzer
+setuptools<81   # resemblyzer -> webrtcvad -> pkg_resources, removed in setuptools 84
+g2p_en
+nltk
+textgrid
+# pesq / pystoi: see the [quality] extra in pyproject.toml -- pesq is sdist-only
+# and needs numpy 2.x headers to build, so it is not a hard dependency.
+jiwer
+zhon

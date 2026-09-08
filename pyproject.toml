@@ -1,0 +1,96 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wavepainter"
+version = "1.0.0"
+description = "Masked-span speech editing with frozen-HuBERT perceptual supervision"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "Aditya Pujari", email = "adityapujari2324@gmail.com" }]
+keywords = ["speech-editing", "speech-synthesis", "diffusion", "hubert"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Pinned to the versions the reported numbers were produced with. torch and
+# torchaudio must agree on their CUDA build; install them from the PyTorch index
+# for your platform before `pip install -e .` if the default wheels do not match.
+dependencies = [
+    "torch==2.4.1",
+    "torchaudio==2.4.1",
+    "numpy<2",
+    "scipy",
+    "pandas",
+    "six",
+    "packaging",
+    "pyyaml",
+    "tqdm",
+    "matplotlib",
+    # torch.utils.tensorboard imports this; an AST walk of the source only sees
+    # `torch`, so it was missed until the code was actually run.
+    "tensorboard",
+    "safetensors",
+    # Upper bound is load-bearing, not caution: transformers 5.x requires
+    # torch >= 2.5 and, against the torch 2.4.1 pinned above, silently DISABLES
+    # its PyTorch backend rather than failing. Whisper then cannot load and
+    # scoring dies at the end of a full synthesis pass. Verified: 4.57.6 works.
+    "transformers>=4.40,<5",
+    "huggingface_hub>=0.23",
+    # audio front end
+    "librosa",
+    "soundfile",
+    "pyloudnorm",
+    "praat-parselmouth",
+    "resemblyzer",
+    # Not a direct import any more -- utils/audio/vad.py, which used webrtcvad,
+    # is gone. But resemblyzer declares webrtcvad>=2.0.10, and webrtcvad imports
+    # pkg_resources at module load, which setuptools 84 removed. resemblyzer is
+    # on the evaluation path (evaluate.py builds a VoiceEncoder), so an
+    # unpinned setuptools breaks scoring on a fresh install.
+    "setuptools<81",
+    # text / alignment
+    "g2p_en",
+    "nltk",
+    "textgrid",
+    # scoring: WER (jiwer) and the harness punctuation set (zhon). ASR is Whisper
+    # via transformers.pipeline, NOT the openai-whisper package. Signal quality is
+    # full-reference and lives in the [quality] extra below.
+    "jiwer",
+    "zhon",
+]
+
+[project.optional-dependencies]
+# Full-reference signal quality (PESQ/STOI), reported in the README table.
+# Optional despite that, because `pesq` ships as an sdist only and cythonises at
+# build time -- Cython >=3.1 emits numpy-2-only bindings while the model stack
+# pins numpy<2, so a hard dependency turns `pip install -e .` into a compile
+# failure on a clean machine. WER and SIM do not need it.
+#     pip install "Cython<3.1"
+#     pip install -e ".[quality]" --no-build-isolation
+quality = ["pesq", "pystoi"]
+
+[project.urls]
+Homepage = "https://github.com/pujariaditya/wavepainter"
+Repository = "https://github.com/pujariaditya/wavepainter"
+Issues = "https://github.com/pujariaditya/wavepainter/issues"
+
+[tool.setuptools.packages.find]
+include = ["wavepainter*"]
+
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]

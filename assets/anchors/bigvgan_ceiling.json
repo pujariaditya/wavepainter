@@ -1,0 +1,17 @@
+{
+ "n": 256,
+ "sim": {
+  "sim": 0.978,
+  "sim_std": 0.009,
+  "n": 256
+ },
+ "quality": {
+  "pesq": 4.351,
+  "stoi": 0.995,
+  "n": 256,
+  "n_skipped": 0,
+  "pesq_max": 4.644
+ },
+ "vocoder": "bigvgan_v2_24khz_100band",
+ "note": "copy-synthesis ceiling: original 24k -> BigVGAN mel -> wav, no editing. PESQ/STOI are full-reference against the original recording; pesq_max is what identical signals score, so the vocoder itself costs about 0.29."
+}

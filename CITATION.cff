@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this software or its released checkpoints, please cite it."
+title: "wavepainter: Multimodal LLM-Guided Diffusion for Text-Based Speech Editing"
+version: 1.0.0
+date-released: 2026-08-07
+license: MIT
+repository-code: "https://github.com/pujariaditya/wavepainter"
+abstract: >-
+  A masked-span speech editor that improves on the previously reported state of
+  the art in substitution and insertion word error rate, and in speaker
+  similarity across substitution, insertion and deletion, on the English full
+  split of Ming-Freeform-Audio-Edit. The contribution is a second training
+  phase: a frozen HuBERT encoder supplies a perceptual feature loss over a
+  matched crop centred on the edit, applied to a denoiser-only trainable
+  surface. The released model is that phase as trained.
+keywords:
+  - speech editing
+  - speech synthesis
+  - diffusion models
+  - self-supervised learning
+authors:
+  - family-names: "Pujari"
+    given-names: "Aditya"
+references:
+  - type: article
+    title: >-
+      Edit Content, Preserve Acoustics: Imperceptible Text-Based Speech Editing
+      via Self-Consistency Rewards
+    year: 2026
+    identifiers:
+      - type: other
+        value: "arXiv:2602.00560"
+    notes: "The baseline these results are compared against."
+    authors:
+      - name: "Ren et al."

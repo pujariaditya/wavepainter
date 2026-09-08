@@ -1,0 +1,34 @@
+# Third-party code, fetched at setup time and never committed.
+third_party/
+
+# Data, weights and run outputs: fetched or rebuilt, never redistributed.
+data/
+checkpoints/
+out/
+*.ckpt
+*.pth
+*.wav
+
+# Phone-mel prototype banks are rebuilt by scripts/build_phone_mel_prototypes.py.
+assets/*.npz
+
+# Paper sources: kept locally, published separately.
+paper/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+
+# Never commit credentials. The Hugging Face token is read from the
+# environment only -- see scripts/upload_weights.py.
+.env
+*.token
+
+# Editor packages are committed; only the fetched SV sources live in third_party/.

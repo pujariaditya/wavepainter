@@ -1,0 +1,69 @@
+# Phase 2: frozen-HuBERT perceptual supervision on a denoiser-only child.
+#
+# This is the released arm. Everything not listed here comes from base.yaml,
+# which is self-contained by design -- see the note at the top of that file for
+# why it deliberately inherits from nothing else.
+#
+# Train with:
+#     ./scripts/train_phase2.sh
+# which runs this config against the released phase-1 base and then interpolates
+# the result back toward that base at alpha=0.85.
+
+# The leading `./` is required, not cosmetic: hparams resolves a base_config
+# relative to THIS file's directory only when it starts with a dot, and treats
+# anything else as relative to the working directory. Without it the base config
+# silently fails to load and every key below becomes the whole config.
+base_config: ./base.yaml
+
+# ---------------------------------------------------------------- the mechanism
+
+# The perceptual term's weight. Large because it is a feature-space MSE on
+# normalised HuBERT activations, which is numerically much smaller than the mel
+# reconstruction terms it sits beside; at 100 the two are comparable in
+# magnitude. This is the single most load-bearing number in the file.
+lambda_hubert_feature: 100.0
+
+# HuBERT's convolutional feature encoder, not a contextual transformer layer.
+# The reported numbers come from `conv`; an integer here selects a contextual
+# layer instead and is a different configuration.
+hubert_feature_layer: conv
+
+# A matched crop centred on each item's real edit mask, rather than the whole
+# utterance -- the signal is local to the edit, and averaging it over an
+# utterance that is mostly unedited dilutes it.
+hubert_feature_crop_frames: 64
+hubert_feature_context_frames: 12
+hubert_feature_items_per_batch: 1
+
+# ------------------------------------------------------- the trainable surface
+
+# Denoiser only: 170 of 531 tensors. The trunk and heads stay byte-exact to the
+# phase-1 base, which is what makes the interpolation below meaningful -- there
+# is nothing to interpolate outside this prefix.
+trainable_only:
+  - denoise_fn.
+
+# ------------------------------------------------------------------- schedule
+
+# An order of magnitude below the phase-1 rate. This is a refinement of a
+# converged model, not a training run.
+lr: 2.0e-05
+max_updates: 1500
+max_sentences: 16
+
+# REQUIRED, and equal to max_updates. `save_checkpoint` has exactly one caller --
+# `run_evaluation`, fired only when `global_step % val_check_interval == 0` -- so
+# with base.yaml's default of 2000 against 1500 updates the run finishes having
+# written no checkpoint at all, and the interpolation step then fails on a
+# missing file. The run that produced the released model used 1500 here.
+val_check_interval: 1500
+
+# Held at the phase-1 endpoint. Phase 2 does not resume the mask-ratio
+# curriculum; changing this makes the child incomparable to the base.
+training_mask_ratio: 0.8
+
+# Off. The bilateral-mask adapters this enables were an earlier, separate
+# attempt and are not on the released path.
+use_context_mask: false
+
+seed: 1234
